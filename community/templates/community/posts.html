@@ -13,9 +13,9 @@
             <div class="hero-section__search">
               <form class="form" action="#" method="get">
                 <div class="form__field">
-                  <label for="formInput#search">Search By Communities </label>
+                  <label for="formInput#search">Search By Posts </label>
                   <input class="input input--text" id="formInput#search" type="text" name="text"
-                    placeholder="Search by Community Title" />
+                    placeholder="Search by Post Title or Tags" />
                 </div>
     
                 <input class="btn btn--sub btn--lg" type="submit" value="Search" />
@@ -31,24 +31,19 @@
               <div class="column">
                 <div class="card project">
                   <a href="{% url 'posts' project.id %}" class="project">
+                    <img class="project__thumbnail" src="{{project.post_image.url}}" alt="project thumbnail" />
                     <div class="card__body">
                       <h3 class="project__title">{{project.title}}</h3>
-                      <p><a class="project__author" href="{% url 'posts' project.id %}">By {{project.owner.name}} </a></p>
+                      <p><a class="project__author">By {{name}} </a></p>
                       <p class="project--rating">
                         <span style="font-weight: bold;">Comments:</span> {{project.number_of_comments}}
                       </p>
                       <p class="project--rating">
                         <span style="font-weight: bold;">{{project.vote_Ratio}}% </span>Positive Feedback ({{project.vote_total}} votes)
                       </p>
-                      <div class="project__tags">
-                        {% for tag in posts.tags.all %}
-                            <span class="tag tag--pill tag--sub tag--lg">
-                            <small>{{tag}}</small>
-                            </span>
-                        {% endfor %}
-                      </div>
                     </div>
                   </a>
+                  <button class="btn btn--sub">Report</button>
                 </div>
             </div>
             {% endfor %}
