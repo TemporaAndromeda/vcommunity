@@ -16,8 +16,8 @@ class Tag(models.Model):
 
 class Post(models.Model):
     user = models.ForeignKey(Profile, null=True, blank= True, on_delete=models.SET_NULL)
-    VOTE_TYPE_POSTS = ((+1, 'UP VOTE'), (-1, ("DOWN VOTE")))
-    Report_TYPE_POSTS = ((+1, 'Reported'),(0, 'Report'))
+    VOTE_TYPE_POSTS = (('up', 'UP VOTE'), ('down', ("DOWN VOTE")))
+    Report_TYPE_POSTS = (('up', 'Reported'),('down', 'Report'))
     id = models.UUIDField(default=uuid.uuid4, unique = True, primary_key=True, editable= False)
     title = models.CharField(max_length=200, blank=False)
     description = models.TextField(max_length=4000, editable=True, blank=True)
@@ -29,28 +29,43 @@ class Post(models.Model):
     report_total = models.IntegerField(default=0, null=True, blank=True)
     vote_total = models.IntegerField(default=0, null=True, blank=True)
     vote_Ratio = models.IntegerField(default=0, null=True, blank=True)
-    vote_value = models.IntegerField(default=0, choices=VOTE_TYPE_POSTS)
+    vote_value = models.IntegerField(default='up', choices=VOTE_TYPE_POSTS)
     creator_name = models.CharField(max_length = 200,editable= False)
     created_at = models.DateTimeField(auto_now_add=True)
     
     def __str__(self):
         return self.title
+
+    class Meta:
+        ordering = ['-vote_Ratio','-vote_total', 'title']
+
+    @property
+    def reviewers(self):
+        queryset = self.comment_set.all().values_list('owner__id', flat=True)
+        return queryset
     
+    @property
+    def getVoteCount(self):
+        reviews = self.comment_set.all()
+        upvotes = reviews.filter(vote_value='up').count()
+        totalVotes = reviews.count()
+
+        ratio = (upvotes/totalVotes)*100
+        self.vote_total = totalVotes
+        self.vote_Ratio = ratio
+        self.save()
 
 class Comment(models.Model):
-    VOTE_TYPE_COMMENTS = ((+1, 'UP VOTE'), (-1, ("DOWN VOTE")))
-    Report_TYPE_COMMENTS = ((+1, 'Reported'), (0, "Report"))
+    VOTE_TYPE_COMMENTS = (('up', 'UP VOTE'), ('up', ("DOWN VOTE")))
+    owner = models.ForeignKey(Profile, on_delete=models.CASCADE, null=True)
     id = models.UUIDField(default=uuid.uuid4, unique = True, primary_key=True, editable= False)
     post_id = models.ForeignKey(Post, on_delete=models.CASCADE)
-    sdescription = models.TextField(max_length=4000, editable=True, blank=True)
-    com_image= models.ImageField(blank=True)
-    report_value = models.IntegerField(default=0, choices=Report_TYPE_COMMENTS)
-    vote_value = models.IntegerField(default=0, choices=VOTE_TYPE_COMMENTS)
-    vote_total = models.IntegerField(default=0, null=True, blank=True)
-    vote_ratio = models.IntegerField(default=0, null=True, blank=True)
+    description = models.TextField(max_length=4000, editable=True, blank=True)
+    vote_value = models.CharField(max_length=200, choices=VOTE_TYPE_COMMENTS)
     creator_name = models.CharField(max_length = 200, editable= False)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.description
+        return self.vote_value
+
         

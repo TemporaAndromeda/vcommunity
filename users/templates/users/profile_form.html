@@ -1,15 +1,27 @@
 {% extends 'main.html' %}
-
+{% load static %}
 {% block content %}
 
-<h1>Edit Account</h1>
 
-<Form method ='POST' action="{% url 'edit-account' %}">
-    {% csrf_token %}
-
-    {{form.as_p}}
-    <input type='submit' value="Submit" />
-
-</Form>
-
+<main class="formPage my-xl" style="background-color: #1c1c1ce7; margin-top: 0%;">
+    <div class="content-box">
+        <h1 style="color: white;">Edit your Profile</h1>
+        <div class="formWrapper">
+        <br>
+            <form class="form" method ='POST' action="{% url 'edit-account' %}" enctype="multipart/form-data">
+                {% csrf_token %}
+                {% for field in form %}
+                <div class="form__field">
+                    <label for="formInput#text">{{field.label}} </label>
+                    {{field}}
+                </div>
+                {% endfor %}
+                
+                <!-- Input:Text -->
+                
+                <input class="btn btn--sub btn--lg  my-md" type="submit" value="Submit" />
+            </form>
+        </div>
+    </div>
+</main>
 {% endblock %}

@@ -57,7 +57,7 @@
           {% if email_domain == domain %} 
           <div class="settings">
             <h3 class="settings__title">Achievements</h3>
-            <a class="tag tag--pill tag--sub settings__btn tag--lg" href="#"><i class="im im-plus"></i> Add Achievements</a>
+            <a class="tag tag--pill tag--sub settings__btn tag--lg" href="{% url 'create-skill' %}"><i class="im im-plus"></i> Add Achievements</a>
           </div>
           {% endif %}
           <table class="settings__table">
@@ -71,8 +71,8 @@
                 </p>
               </td>
               <td class="settings__tableActions">
-                <a class="tag tag--pill tag--main settings__btn" href="#"><i class="im im-edit"></i> Edit</a>
-                <a class="tag tag--pill tag--main settings__btn" href="#"><i class="im im-x-mark-circle-o"></i>
+                <a class="tag tag--pill tag--main settings__btn" href="{% url 'update-skill' skill.id %}"><i class="im im-edit"></i> Edit</a>
+                <a class="tag tag--pill tag--main settings__btn" href="{% url 'delete-skill' skill.id %}?next=/account"><i class="im im-x-mark-circle-o"></i>
                   Delete</a>
               </td>
             </tr>
@@ -82,31 +82,34 @@
           </table>
 
           <div class="settings">
-            <h3 class="settings__title">Projects</h3>
-            <a class="tag tag--pill tag--sub settings__btn tag--lg" href="#"><i class="im im-plus"></i> Add Project</a>
+            <h3 class="settings__title">Posts</h3>
+            <a class="tag tag--pill tag--sub settings__btn tag--lg" href="{% url 'create-post' %}"><i class="im im-plus"></i> Add Post</a>
           </div>
 
           <table class="settings__table">
-            {% for project in projects %}
+            {% for project in profile.post_set.all %}
             <tr>
               <td class="settings__thumbnail">
-                <a href="{% url 'project' project.id %}"><img src="{{project.post_image.url}}" alt="Project Thumbnail" /></a>
+                <a href="{% url 'posts' project.id %}"><img src="{{project.post_image.url}}" alt="Project Thumbnail" /></a>
               </td>
               <td class="settings__tableInfo">
-                <a href="{% url 'project' project.id %}">{{project.title}}</a>
-                <p>{{project.description|slice:'150'}}</p>
+                <a href="{% url 'posts' project.id %}">{{project.title}}</a>
+                <p>{{project.description|slice:"150"}}</p>
               </td>
               <td class="settings__tableActions">
-                <a class="tag tag--pill tag--main settings__btn" href="#"><i class="im im-edit"></i> Edit</a>
-                <a class="tag tag--pill tag--main settings__btn" href="#"><i class="im im-x-mark-circle-o"></i>
+                <a class="tag tag--pill tag--main settings__btn" href="{% url 'update-post' project.id %}"><i
+                    class="im im-edit"></i> Edit</a>
+                <a class="tag tag--pill tag--main settings__btn"
+                  href="{% url 'delete-post'  project.id %}?next=/account"><i class="im im-x-mark-circle-o"></i>
                   Delete</a>
               </td>
             </tr>
-            {% endfor %}
-          </table>
+            {% endfor %}        
+          </table>     
         </div>
       </div>
     </div>
   </main>
 
 {% endblock %}
+

@@ -6,15 +6,15 @@
     <section class="hero-section text-center">
       <div class="container container--narrow">
         <div class="hero-section__box">
-          <h2>CONNECT WITH <span>MASTER TEACHERS</span></h2>
-          <h2>FROM <span>VEDANTU</span></h2>
+          <h2>CONNECT WITH <span style="color: #FFB500;">MASTER TEACHERS</span></h2>
+          <h2>FROM <span style="color: #FF5B00;">VEDANTU</span></h2>
         </div>
         <div class="hero-section__search">
-          <form class="form" action="#" method="get">
+          <form class="form" action="{% url 'profiles' %}" method="get">
             <div class="form__field">
               <label for="formInput#search">Search Master Teacher </label>
               <input class="input input--text" id="formInput#search" type="text" name="text"
-                placeholder="Search by Master Teacher" />
+                value='{{search_query}}'  placeholder="Search by Master Teacher" />
             </div>
 
             <input class="btn btn--sub btn--lg" type="submit" value="Search" />
@@ -47,5 +47,6 @@
         </div>
       </div>
     </section>
+    
   </main>
 {% endblock %}

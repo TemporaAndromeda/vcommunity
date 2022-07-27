@@ -1,0 +1,56 @@
+{% extends 'main.html' %}
+
+{% block content %}
+
+<!-- <h1>This is the community page</h1> -->
+<main class="projects">
+        <section class="hero-section text-center">
+          <div class="container container--narrow">
+            <div class="hero-section__box">
+              <h2>Search for <span>Communities</span></h2>
+            </div>
+    
+            <div class="hero-section__search">
+              <form class="form" action="#" method="get">
+                <div class="form__field">
+                  <label for="formInput#search">Search By Communities </label>
+                  <input class="input input--text" id="formInput#search" type="text" name="text"
+                    placeholder="Search by Community Title" />
+                </div>
+    
+                <input class="btn btn--sub btn--lg" type="submit" value="Search" />
+              </form>
+            </div>
+          </div>
+        </section>
+        <!-- Search Result: DevList -->
+        <section class="projectsList">
+          <div class="container">
+            <div class="grid grid--three">
+             {% for project in community  %}
+              <div class="column">
+                <div class="card project">
+                  <a href="{% url 'communities' project.id %}" class="project">
+                    <img class="project__thumbnail" src="{{project.com_image.url}}" alt="project thumbnail" />
+                    <div class="card__body">
+                      <h3 class="project__title">{{project.title}}</h3>
+                      <p><a class="project__author" href="{% url 'communities' project.id %}">By Dennis Ivanov </a></p>
+                      <p class="project--rating">
+                        <span style="font-weight: bold;">Members:</span> {{project.number_of_members}}
+                      </p>
+                      <div class="project__tags">
+                        <span class="tag tag--pill tag--main">
+                          <small>Posts: {{project.number_of_posts}}</small>
+                        </span>
+                       </div>
+                    </div>
+                  </a>
+                </div>
+            </div>
+            {% endfor %}
+            </div>
+          </div>
+        </section>
+      </main>
+</ul>
+{% endblock content %}

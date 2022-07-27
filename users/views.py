@@ -2,10 +2,11 @@ import email
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.models import User
-from .models import Profile
+from .models import Profile, Skill, Message
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from .forms import CustomUserCreationForm, ProfileForm
+from .forms import CustomUserCreationForm, ProfileForm, ProfileFormUser, SkillForm, MessageForm
+from .utils import searchProfiles
 
 # Create your views here.
 
@@ -17,7 +18,7 @@ def loginUser(request):
 
 
     if request.method == 'POST':
-        username = request.POST['username']
+        username = request.POST['username'].lower()
         password = request.POST['password']
         try:
             user = User.objects.get(username=username)
@@ -29,7 +30,7 @@ def loginUser(request):
         if user is not None:
             login(request, user)
             print("user logged in")
-            return redirect('profiles')
+            return redirect(request.GET['next'] if 'next' in request.GET else 'account')
         else:
             messages.error(request, "Username OR Password is incorrect")
     return render(request, 'users/login_register.html')
@@ -55,7 +56,7 @@ def registerUser(request):
                 user.save()
                 messages.success(request, 'User account was created!')
                 login(request,user)
-                return redirect('profiles')
+                return redirect('edit-account')
             else:
                 messages.error(request, 'Incorrect Email')
             
@@ -68,8 +69,8 @@ def registerUser(request):
     return render(request, 'users/register.html', context)
 
 def profiles(request):
-    profiles = Profile.objects.filter(email__contains='@vedantu.com')
-    context = {'profiles' : profiles}
+    profiles, search_query = searchProfiles(request)
+    context = {'profiles' : profiles, 'search-query': search_query}
     return render(request, 'users/profiles.html', context)
 
 
@@ -94,6 +95,110 @@ def userAccount(request):
 
 @login_required(login_url='login')
 def editAccount(request):
-    form = ProfileForm()
-    context ={'form': form}
+    profile = request.user.profile
+    domain = "vedantu.com"
+    email_domain = profile.email[profile.email.index('@') + 1 : ].lower()
+    if email_domain == domain:
+        form = ProfileForm(instance = profile)
+        if request.method == "POST":
+            form = ProfileForm(request.POST, request.FILES, instance = profile)
+            if form.is_valid:
+                form.save()
+                return redirect('account')
+    else:
+        form = ProfileFormUser(instance = profile)
+        if request.method == "POST":
+            form = ProfileForm(request.POST, request.FILES, instance = profile)
+            if form.is_valid:
+                form.save()
+                return redirect('account')
+
+    context = {'form': form, 'domain': domain, 'email_domain': email_domain}
     return render(request, 'users/profile_form.html', context)
+
+@login_required(login_url='login')
+def createSkill(request):
+    profile = request.user.profile
+    form = SkillForm()
+    
+    if request.method == 'POST':
+        form = SkillForm(request.POST)
+        if form.is_valid():
+            skill = form.save(commit=False)
+            skill.owner = profile
+            skill.save()
+            messages.success(request, 'Skill was added successfully!')
+            return redirect("account")
+    context = {'form' : form}
+    return render(request, 'users/skill_form.html', context)
+
+
+@login_required(login_url='login')
+def updateSkill(request,pk):
+    profile = request.user.profile
+    skill = profile.skill_set.get(id = pk)
+    form = SkillForm(instance = skill)
+    if request.method == 'POST':
+        form = SkillForm(request.POST, instance = skill)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Skill was updated successfully!')
+            return redirect("account")
+    context = {'form' : form}
+    return render(request, 'users/skill_form.html', context)
+
+@login_required(login_url='login')
+def deleteSkill(request, pk):
+    profile = request.user.profile
+    skill = profile.skill_set.get(id = pk)
+    if  request.method == 'POST':
+        skill.delete()
+        messages.success(request, 'Skill was Deleted successfully')
+        return redirect('account')
+
+    context ={'object': skill}
+    return render(request, 'delete_object.html', context)
+
+@login_required(login_url='login')
+def inbox(request):
+    profile = request.user.profile
+    messageRequests = profile.messages.all()
+    unreadCount= messageRequests.filter(is_read=False).count()
+    context={'messageRequests': messageRequests, 'unreadCount': unreadCount}
+    return render(request, 'users/inbox.html', context)
+
+
+@login_required(login_url='login')
+def viewMessage(request, pk):
+    profile = request.user.profile
+    message = profile.messages.get(id=pk)
+    if message.is_read == False:
+        message.is_read=True
+        message.save()
+    context ={'message': message}
+    return render(request, 'users/message.html', context)
+
+def createMessage(request, pk):
+    recipient = Profile.objects.get(id=pk)
+    form = MessageForm()
+    
+    try:
+        sender = request.user.profile
+    except:
+        sender= None
+    if request.method == 'POST':
+        form = MessageForm(request.POST)
+        if form.is_valid():
+            message = form.save(commit=False)
+            message.sender = sender
+            message.recipient = recipient
+
+            if sender:
+                message.name = sender.name
+                message.email = sender.email
+            
+            message.save()
+            messages.success(request, 'Your message was successfully sent!')
+            return redirect('uxer-profile', pk =recipient.id)
+    context ={'recipient': recipient}
+    return render(request, 'users/message_form.html', context)

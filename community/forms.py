@@ -19,3 +19,18 @@ class PostForm(ModelForm):
 
         # self.fields['title'].widget.attrs.update({'class':'input', 'placeholder' : 'Add Title'})
         # self.fields['description'].widget.attrs.update({'class':'input', 'placeholder' : 'Add Description'})
+
+
+class CommentForm(ModelForm):
+    class Meta:
+        model = Comment
+        fields = ["vote_value", 'description']
+        labels = {
+            "vote_value": "Place your Vote",
+            "description": "Add a comment with your vote"
+            }
+    def __init__(self, *args, **kwargs):
+        super(CommentForm, self).__init__( *args, **kwargs)
+
+        for name, field in self.fields.items():
+            field.widget.attrs.update({'class': 'input'})
