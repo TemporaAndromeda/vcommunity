@@ -5,7 +5,7 @@ from django import forms
 class PostForm(ModelForm):
     class Meta:
         model = Post
-        fields = ["title", "description", "post_image", "tags", "source_link"]
+        fields = ["title", "description", "post_image", "source_link"]
         widgets ={
             'tags': forms.CheckboxSelectMultiple(),
 

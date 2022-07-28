@@ -15,7 +15,7 @@ class Tag(models.Model):
         return self.name
 
 class Post(models.Model):
-    user = models.ForeignKey(Profile, null=True, blank= True, on_delete=models.SET_NULL)
+    user = models.ForeignKey(Profile, null=True, blank= True, on_delete=models.CASCADE)
     VOTE_TYPE_POSTS = (('up', 'UP VOTE'), ('down', ("DOWN VOTE")))
     Report_TYPE_POSTS = (('up', 'Reported'),('down', 'Report'))
     id = models.UUIDField(default=uuid.uuid4, unique = True, primary_key=True, editable= False)
@@ -38,6 +38,14 @@ class Post(models.Model):
 
     class Meta:
         ordering = ['-vote_Ratio','-vote_total', 'title']
+
+    @property
+    def imageURL(self):
+        try:
+            url = self.post_image.url
+        except:
+            url = ''
+        return url
 
     @property
     def reviewers(self):

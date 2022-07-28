@@ -36,11 +36,15 @@ def createPost(request):
     profile = request.user.profile
     form = PostForm()
     if request.method == 'POST':
+        newtags = request.POST.get('newtags').replace(',', " ").split()
         form = PostForm(request.POST, request.FILES)
         if form.is_valid():
             post = form.save(commit=False)
             post.user = profile
             post.save()
+            for tag in newtags:
+                tag, created = Tag.objects.get_or_create(name=tag)
+                post.tags.add(tag)
             return redirect("post")
     
 
@@ -55,9 +59,13 @@ def updatePost(request,pk):
     project = profile.post_set.get(id = pk)
     form = PostForm(instance = project)
     if request.method == 'POST':
+        newtags = request.POST.get('newtags').replace(',', " ").split()
         form = PostForm(request.POST, request.FILES, instance=project)
         if form.is_valid():
-            form.save()
+            project = form.save()
+            for tag in newtags:
+                tag, created = Tag.objects.get_or_create(name=tag)
+                project.tags.add(tag)
             return redirect('post')
     
     context={'form': form}
