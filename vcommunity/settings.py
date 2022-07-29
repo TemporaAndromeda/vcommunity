@@ -79,16 +79,6 @@ WSGI_APPLICATION = 'vcommunity.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'Matterbase',
-#         'USER': 'postgres',
-#         'PASSWORD': 'Olympus.941@',
-#         'HOST': 'localhost',
-#         'PORT': '5432',
-#     }
-# }
 
 DATABASES = {
     'default': {
@@ -133,8 +123,8 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'ddeyphysics2010@gmail.com'
-EMAIL_HOST_PASSWORD = 'ydwytkwzlgchukbl'
+EMAIL_HOST_USER = ''
+EMAIL_HOST_PASSWORD = ''
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
