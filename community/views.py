@@ -8,7 +8,7 @@ from .utils import searchPost, paginationPosts
 from django.contrib import messages
 
 # Create your views here.
-@login_required(login_url="login")
+
 def post(request):
     projects, search_query = searchPost(request)
     custom_range, projects = paginationPosts(request, projects, 6)
@@ -68,7 +68,7 @@ def updatePost(request,pk):
                 project.tags.add(tag)
             return redirect('post')
     
-    context={'form': form}
+    context={'form': form, 'project': project}
     return render(request, "community/post_form.html", context)
 
 
@@ -82,3 +82,13 @@ def deletePost(request, pk):
     context = {"object": project}
     return render(request, 'delete_object.html', context)
 
+
+def removeTag(request):
+    tagId = request.data['tag']
+    projectId = request.data['project']
+
+    project = Post.objects.get(id = projectId)
+    tag = Tag.objects.get(id = tagId)
+
+    project.tags.remove(tag)
+    return 

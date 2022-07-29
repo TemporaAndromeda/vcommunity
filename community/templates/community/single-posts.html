@@ -14,13 +14,13 @@
             {% endfor %}
             </div>
         {% if posts.source_link %}    
-        <a class="singleProject__liveLink" href="#" target="_blank"><i class="im im-external-link"></i>Source Link
+        <a class="singleProject__liveLink" href="{{posts.source_link}}" target="_blank"><i class="im im-external-link"></i>Source Link
         </a>
         {% endif %} 
         </div>
         <div class="column column--2of3">
           <img class="singleProject__preview" src="{{posts.imageURL}}" alt="portfolio thumbnail" />
-          <a href="profile.html" class="singleProject__developer">{{posts.user.name}}</a>
+          <a href="{% url 'user-profile' posts.user.id %}" class="singleProject__developer">{{posts.user.name}}</a>
           <h2 class="singleProject__title">{{posts.title}}</h2>
           <h3 class="singleProject__subtitle">About the Post</h3>
           <div class="singleProject__info">
