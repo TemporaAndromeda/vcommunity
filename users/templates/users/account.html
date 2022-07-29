@@ -12,7 +12,6 @@
               <h2 class="dev__name">{{profile.name}}</h2>
               <p class="dev__title">{{profile.short_intro}}</p>
               <p class="dev__location">Based in {{profile.location}}</p>
-              {% if email_domain == domain %} 
               <ul class="dev__social">
                 {% if profile.social_github %}
                 <li>
@@ -40,28 +39,23 @@
                 </li>
                 {% endif %}
               </ul>
-              {% endif %}
               </div>
           </div>
         </div>
         
         <div class="column column--2of3">
-          {% if email_domain == domain %}
           <div class="devInfo">
             <h3 class="devInfo__title">About Me</h3>
             <p class="devInfo__about">
              {{profile.bio}}
             </p>
           </div>
-          {% endif %}
-          {% if email_domain == domain %} 
           <div class="settings">
             <h3 class="settings__title">Achievements</h3>
             <a class="tag tag--pill tag--sub settings__btn tag--lg" href="{% url 'create-skill' %}"><i class="im im-plus"></i> Add Achievements</a>
           </div>
-          {% endif %}
           <table class="settings__table">
-            {% if email_domain == domain %} 
+
             {% for skill in skills %}
             <tr>
               <td class="settings__tableInfo">
@@ -77,7 +71,7 @@
               </td>
             </tr>
             {% endfor %}
-            {% endif %}
+
           
           </table>
 

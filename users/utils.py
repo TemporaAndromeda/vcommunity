@@ -16,7 +16,6 @@ def searchProfiles(request):
     skills = Skill.objects.filter(name__icontains= search_query)
 
     profiles = Profile.objects.distinct().filter(Q(name__icontains=search_query) |  
-         Q(skill__in=skills)
-        , email__contains='@vedantu.com')
+         Q(skill__in=skills))
 
     return profiles, search_query

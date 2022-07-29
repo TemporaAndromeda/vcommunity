@@ -43,7 +43,6 @@ def logoutUser(request):
 
 def registerUser(request):
     page = 'register'
-    domain = "vedantu.com"
     form = CustomUserCreationForm()
 
     if request.method == 'POST':
@@ -51,16 +50,10 @@ def registerUser(request):
         if form.is_valid():
             user = form.save(commit=False)
             user.username = user.username.lower()
-            email_domain = user.email[user.email.index('@') + 1 : ].lower()
-            if email_domain != domain:
-                user.save()
-                messages.success(request, 'User account was created!')
-                login(request,user)
-                return redirect('edit-account')
-            else:
-                messages.error(request, 'Incorrect Email')
-            
-
+            user.save()
+            messages.success(request, 'User account was created!')
+            login(request,user)
+            return redirect('edit-account')
         else:
             messages.error(request, 'An error has occured during registration')
 
@@ -85,35 +78,24 @@ def userprofile(request, pk):
 @login_required(login_url='login')
 def userAccount(request):    
     profile = request.user.profile
-    domain = "vedantu.com"
-    email_domain = profile.email[profile.email.index('@') + 1 : ].lower()
     skills = profile.skill_set.all()
     projects = profile.post_set.all()
 
-    context ={'profile': profile, 'domain': domain, 'email_domain': email_domain, 'skills': skills, 'projects': projects}
+    context ={'profile': profile, 'skills': skills, 'projects': projects}
     return render(request, 'users/account.html', context)
 
 @login_required(login_url='login')
 def editAccount(request):
     profile = request.user.profile
-    domain = "vedantu.com"
-    email_domain = profile.email[profile.email.index('@') + 1 : ].lower()
-    if email_domain == domain:
-        form = ProfileForm(instance = profile)
-        if request.method == "POST":
-            form = ProfileForm(request.POST, request.FILES, instance = profile)
-            if form.is_valid:
-                form.save()
-                return redirect('account')
-    else:
-        form = ProfileFormUser(instance = profile)
-        if request.method == "POST":
-            form = ProfileForm(request.POST, request.FILES, instance = profile)
-            if form.is_valid:
-                form.save()
-                return redirect('account')
 
-    context = {'form': form, 'domain': domain, 'email_domain': email_domain}
+    form = ProfileForm(instance = profile)
+    if request.method == "POST":
+        form = ProfileForm(request.POST, request.FILES, instance = profile)
+        if form.is_valid:
+            form.save()
+            return redirect('account')
+
+    context = {'form': form}
     return render(request, 'users/profile_form.html', context)
 
 @login_required(login_url='login')
