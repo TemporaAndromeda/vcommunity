@@ -85,10 +85,10 @@ WSGI_APPLICATION = 'vcommunity.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ.get('DB_NAME'),
-        'USER': os.environ.get('DB_USER'),
-        'PASSWORD': os.environ.get('DB_PASSWORD'),
-        'HOST': os.environ.get('DB_HOST'),
+        'NAME': 'matterDB',
+        'USER': 'MatterDB',
+        'PASSWORD': 'Olympus941',
+        'HOST': 'database-2.cju3haoxbcox.ap-south-1.rds.amazonaws.com',
         'PORT': 5432,
     }
 }
