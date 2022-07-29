@@ -28,7 +28,7 @@ urlpatterns = [
     path('home/', home, name="home"),
     path('blog/', include("blog.urls")),
     path('', include("community.urls")),
-    path('room/', include("rooms.urls")),
+    path('matter/', include("rooms.urls")),
     path('user/', include("users.urls")),
     path('reset_password/', auth_views.PasswordResetView.as_view(template_name ='reset_password.html'), name='reset_password'),
     path('reset_password_sent/', auth_views.PasswordResetDoneView.as_view(template_name ='reset_password_sent.html'), name='password_reset_done'),
