@@ -15,8 +15,6 @@ class Tag(models.Model):
 
 class Post(models.Model):
     user = models.ForeignKey(Profile, null=True, blank= True, on_delete=models.CASCADE)
-    VOTE_TYPE_POSTS = (('up', 'UP VOTE'), ('down', ("DOWN VOTE")))
-    Report_TYPE_POSTS = (('up', 'Reported'),('down', 'Report'))
     id = models.UUIDField(default=uuid.uuid4, unique = True, primary_key=True, editable= False)
     title = models.CharField(max_length=200, blank=False)
     description = models.TextField(max_length=4000, editable=True, blank=True)
@@ -24,11 +22,8 @@ class Post(models.Model):
     source_link = models.CharField(max_length=2000, null=True, blank= True)
     tags = models.ManyToManyField(Tag, blank= True)
     number_of_comments = models.IntegerField(default = 0, editable = False)
-    report_value = models.IntegerField(default=0, choices=Report_TYPE_POSTS)
-    report_total = models.IntegerField(default=0, null=True, blank=True)
     vote_total = models.IntegerField(default=0, null=True, blank=True)
     vote_Ratio = models.IntegerField(default=0, null=True, blank=True)
-    vote_value = models.IntegerField(default='up', choices=VOTE_TYPE_POSTS)
     creator_name = models.CharField(max_length = 200,editable= False)
     created_at = models.DateTimeField(auto_now_add=True)
     
