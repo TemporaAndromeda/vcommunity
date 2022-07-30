@@ -27,7 +27,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'matter-room.herokuapp.com']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'matterroom.herokuapp.com']
 
 
 # Application definition
@@ -154,11 +154,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-if os.getcwd() == '/app':
-    DEBUG = False
-    
-
+   
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
 AWS_QUERYSTRING_AUTH = False
